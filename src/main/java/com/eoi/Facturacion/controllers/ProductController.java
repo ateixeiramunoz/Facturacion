@@ -14,7 +14,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping("/")
+    @GetMapping(value = {"/",""})
     public String showProducts(Model model) {
         model.addAttribute("products", productService.findAll());
         return "product-list";
