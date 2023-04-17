@@ -24,5 +24,4 @@ public class Product {
 
     private Double price;
 
-    // Constructor, getters y setters
 }

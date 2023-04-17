@@ -30,6 +30,7 @@ public class ProductRestController {
         return productService.save(product);
     }
 
+
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable Long id) {
         productService.deleteById(id);
