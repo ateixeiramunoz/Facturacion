@@ -21,8 +21,13 @@ public class ProductRestController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Product> findById(@PathVariable Long id) {
-        return productService.findById(id);
+    public Product findById(@PathVariable Long id) {
+        Optional<Product> product =productService.findById(id);
+        if (product.isPresent())
+        {
+            return product.get();
+        }
+        return null;
     }
 
     @PostMapping

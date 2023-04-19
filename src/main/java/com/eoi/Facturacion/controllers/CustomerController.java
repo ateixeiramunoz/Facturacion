@@ -1,11 +1,11 @@
 package com.eoi.Facturacion.controllers;
 
+import com.eoi.Facturacion.entities.Contract;
 import com.eoi.Facturacion.entities.Customer;
 import com.eoi.Facturacion.entities.Invoice;
+import com.eoi.Facturacion.services.ContractService;
 import com.eoi.Facturacion.services.CustomerService;
 import com.eoi.Facturacion.services.InvoiceService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,21 +23,27 @@ public class CustomerController {
     private CustomerService customerService;
     @Autowired
     private InvoiceService invoiceService;
+    @Autowired
+    private ContractService contractService;
+
 
     @GetMapping(value = {"/",""})
     public String showCustomers(Model model) {
-        model.addAttribute("customers", customerService.findAll());
-        return "customer-list";
+        model.addAttribute("dataObject", customerService.findAll());
+        model.addAttribute("fragmentName", "fragment-customer-list");
+
+        return "index";
     }
 
     @GetMapping("/new")
     public String showNewCustomerForm(Model model) {
         model.addAttribute("customer", new Customer());
-        return "customer-form";
+        model.addAttribute("fragmentName", "fragment-customer-form");
+        return "index";
     }
 
     @PostMapping("/save")
-    public String saveCustomer(@ModelAttribute("customer") Customer customer) {
+    public String saveCustomer(Customer customer) {
         customerService.save(customer);
         return "redirect:/customers/";
     }
@@ -48,12 +54,13 @@ public class CustomerController {
         Optional<Customer> customer = customerService.findById(id);
         if(customer.isPresent()){
             model.addAttribute("customer", customer.get());
-        }else{
+        }
+        else{
             // Si el cliente no existe, redirigir a una página de error o mostrar un mensaje de error
             return "error-page";
         }
 
-        return "customer-form";
+        return "customer/customer-form";
 
     }
 
@@ -71,16 +78,14 @@ public class CustomerController {
             Invoice invoice = new Invoice();
             invoice.setCustomer(customer.get());
             model.addAttribute("invoice", invoice);
-            return "customer-invoice-form";
+            return "customer/customer-invoice-form";
         }else {
             return "error";
         }
-
     }
 
-
     @PostMapping("/{id}/invoices/new")
-    public String createInvoice(@PathVariable("id") Long id, @ModelAttribute("invoice") Invoice invoice) {
+    public String createInvoice(@PathVariable("id") Long id, Invoice invoice) {
         Optional<Customer> customer = customerService.findById(id);
         if(customer.isPresent()){
             invoice.setCustomer(customer.get());
@@ -93,6 +98,39 @@ public class CustomerController {
         }
 
     }
+
+
+    @GetMapping("/{id}/contracts/new")
+    public String newContractForm(@PathVariable("id") Long id, Model model) {
+        Optional<Customer> customer = customerService.findById(id);
+        if(customer.isPresent()){
+            Contract contract = new Contract();
+            contract.setCustomer(customer.get());
+            model.addAttribute("contract", contract);
+            return "customer/customer-contract-form";
+        }else {
+            return "error";
+        }
+    }
+
+
+    @PostMapping("/{id}/contracts/new")
+    public String createContract(@PathVariable("id") Long id, Contract contract) {
+        Optional<Customer> customer = customerService.findById(id);
+        if(customer.isPresent()){
+            contract.setCustomer(customer.get());
+            contractService.save(contract);
+            return "redirect:/customers/edit/" + id;
+        }
+        else
+        {
+            return "error";
+        }
+    }
+
+
+
+
 
 
 

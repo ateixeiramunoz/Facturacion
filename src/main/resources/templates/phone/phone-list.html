@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Teléfonos</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<ul class="nav nav-pills navbar-light bg-light justify-content-center">
+    <li class="nav-item">
+        <a class="nav-link active" th:href="@{/}" href="#">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" th:href="@{/customers}" href="#">Customers</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" th:href="@{/contracts}" href="#">Contracts</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" th:href="@{/invoices}" href="#">Invoices</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" th:href="@{/products}" href="#">Products</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" th:href="@{/subscriptions}" href="#">Subscriptions</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link"th:href="@{/phones}"  href="#">Phones</a>
+    </li>
+</ul>
+</header>
+
+<div class="container">
+    <h1>Lista de Teléfonos</h1>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Color</th>
+            <th>Suscripciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="phone : ${phones}">
+            <td th:text="${phone.id}"></td>
+            <td th:text="${phone.brand}"></td>
+            <td th:text="${phone.model}"></td>
+            <td th:text="${phone.color}"></td>
+            <td>
+                <ul>
+                    <li th:each="subscription : ${phone.subscriptions}" th:text="${subscription.planName}"></li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

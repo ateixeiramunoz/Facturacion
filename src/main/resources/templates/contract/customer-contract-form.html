@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Contract Form</h1>
+
+<form th:action="@{/customers/{customerId}/contracts/new(customerId=${contract.customer.id})}" th:object="${contract}" method="post">
+  <input type="hidden" th:field="*{id}">
+  <div>
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" th:field="*{startDate}" required />
+  </div>
+  <div>
+    <label for="endDate">End Date:</label>
+    <input type="date" id="endDate" th:field="*{endDate}" required />
+  </div>
+  <button type="submit">Save</button>
+</form>
+</body>
+</html>

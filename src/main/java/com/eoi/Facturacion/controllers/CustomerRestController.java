@@ -5,6 +5,7 @@ import com.eoi.Facturacion.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,33 +22,28 @@ public class CustomerRestController {
     @GetMapping
 
     public List<Customer> findAll() {
-
         return customerService.findAll();
-
     }
 
     @GetMapping("/{id}")
+    public Customer findById(@PathVariable Long id) {
 
-    public Optional<Customer> findById(@PathVariable Long id) {
-
-        return customerService.findById(id);
-
+        Optional<Customer> customer = customerService.findById(id);
+        if(customer.isPresent())
+        {
+            return customer.get();
+        }
+        return null;
     }
 
     @PostMapping
-
     public Customer save(@RequestBody Customer customer) {
-
         return customerService.save(customer);
-
     }
 
     @DeleteMapping("/{id}")
-
     public void deleteById(@PathVariable Long id) {
-
         customerService.deleteById(id);
-
     }
 
 }
