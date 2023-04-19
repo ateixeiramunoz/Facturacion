@@ -1,0 +1,25 @@
+<div class="container" th:fragment="fragment-contract-list(dataObject)">
+    <h1 class="my-4">Contract List</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>startDate</th>
+            <th>endDate</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="contract : ${dataObject}">
+            <td th:text="${contract.id}">1</td>
+            <td th:text="${contract.startDate}">Contract startDate</td>
+            <td th:text="${contract.endDate}">Contract endDate</td>
+            <td>
+                <a class="btn btn-outline-primary" th:href="@{/contracts/edit/{id}(id=${contract.id})}">Edit</a>
+                <a onclick="return confirm('Are you sure you want to delete this customer?')" class="btn btn-outline-danger" th:href="@{/contracts/delete/{id}(id=${contract.id})}">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a class="btn btn-outline-success" th:href="@{/contracts/new}">Add New Contract</a>
+</div>

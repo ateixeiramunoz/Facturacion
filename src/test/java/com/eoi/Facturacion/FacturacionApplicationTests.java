@@ -8,6 +8,8 @@ class FacturacionApplicationTests {
 
 	@Test
 	void contextLoads() {
+
+
 	}
 
 }

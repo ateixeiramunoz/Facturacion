@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Contract Form</h1>
+<form th:object="${contract}" th:action="@{/contracts/save}" method="post">
+  <input type="hidden" th:field="*{id}">
+  <div>
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" th:field="*{startDate}" required />
+  </div>
+  <div>
+    <label for="endDate">End Date:</label>
+    <input type="date" id="endDate" th:field="*{endDate}" required />
+  </div>
+  <button type="submit">Save</button>
+</form>
+</body>
+</html>
