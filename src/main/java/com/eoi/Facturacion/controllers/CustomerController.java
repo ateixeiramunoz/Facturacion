@@ -26,7 +26,6 @@ public class CustomerController {
     @Autowired
     private ContractService contractService;
 
-
     @GetMapping(value = {"/",""})
     public String showCustomers(Model model) {
         model.addAttribute("dataObject", customerService.findAll());
@@ -127,11 +126,5 @@ public class CustomerController {
             return "error";
         }
     }
-
-
-
-
-
-
 
 }

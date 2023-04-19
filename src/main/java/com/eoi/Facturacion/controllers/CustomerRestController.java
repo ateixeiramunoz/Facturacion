@@ -2,6 +2,7 @@ package com.eoi.Facturacion.controllers;
 
 import com.eoi.Facturacion.entities.Customer;
 import com.eoi.Facturacion.services.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,8 +37,8 @@ public class CustomerRestController {
         return null;
     }
 
-    @PostMapping
-    public Customer save(@RequestBody Customer customer) {
+    @PostMapping(produces = "application/json")
+    public Customer save(@Valid @RequestBody  Customer customer) {
         return customerService.save(customer);
     }
 
