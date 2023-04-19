@@ -1,10 +1,13 @@
 package com.eoi.Facturacion;
 
 import com.eoi.Facturacion.controllers.CustomerController;
+import com.eoi.Facturacion.controllers.CustomerRestController;
 import com.eoi.Facturacion.entities.Contract;
 import com.eoi.Facturacion.entities.Customer;
 import com.eoi.Facturacion.entities.Invoice;
+import com.eoi.Facturacion.entities.Tax;
 import com.eoi.Facturacion.services.CustomerService;
+import com.eoi.Facturacion.services.InvoiceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,17 +15,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CustomerController.class)
@@ -35,6 +38,12 @@ public class CustomerControllerTest {
     private CustomerService customerService;
 
     private Customer customer;
+
+    @Autowired
+    private CustomerRestController customerRepository;
+
+    @Autowired
+    private InvoiceService invoiceService;
 
     @BeforeEach
     public void setUp() {
@@ -110,7 +119,7 @@ public class CustomerControllerTest {
                 .andExpect(view().name("redirect:/customers/"));
 
         // Verificar que el cliente haya sido eliminado
-        Optional<Customer> optionalCustomer = customerRepository.findById(customer.getId());
+        Optional<Customer> optionalCustomer = customerService.findById(customer.getId());
         assertFalse(optionalCustomer.isPresent());
     }
 
@@ -130,16 +139,34 @@ public class CustomerControllerTest {
         Invoice invoice = createTestInvoice(customer);
 
         mockMvc.perform(post("/customers/" + customer.getId() + "/invoices/new")
-                        .param("description", invoice.getDescription())
                         .param("amount", invoice.getAmount().toString()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/customers/edit/" + customer.getId()));
 
         // Verificar que la factura se haya creado y esté asociada al cliente
-        Optional<Invoice> optionalInvoice = invoiceRepository.findById(invoice.getId());
+        Optional<Invoice> optionalInvoice = invoiceService.findById(invoice.getId());
         assertTrue(optionalInvoice.isPresent());
         assertEquals(customer.getId(), optionalInvoice.get().getCustomer().getId());
     }
+
+    private Invoice createTestInvoice(Customer customer) {
+        Invoice invoice = new Invoice();
+        invoice.setCodigoFactura("COD-123");
+        invoice.setBillingDate(LocalDate.now());
+        invoice.setAmount(BigDecimal.valueOf(100.0));
+        invoice.setCustomer(customer);
+
+        Tax tax1 = new Tax();
+        tax1.setName("IVA");
+        tax1.setPercentage(BigDecimal.valueOf(21.0));
+        Tax tax2 = new Tax();
+        tax2.setName("Impuesto a las ventas");
+        tax2.setPercentage(BigDecimal.valueOf(10.5));
+        invoice.setImpuestos(Arrays.asList(tax1, tax2));
+
+        return invoice;
+    }
+
 
     @Test
     public void testNewContractForm() throws Exception {

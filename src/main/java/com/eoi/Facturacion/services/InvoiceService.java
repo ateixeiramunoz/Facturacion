@@ -16,12 +16,15 @@ public class InvoiceService {
     public List<Invoice> findAll() {
         return invoiceRepository.findAll();
     }
+
     public Optional<Invoice> findById(Long id) {
         return invoiceRepository.findById(id);
     }
+
     public Invoice save(Invoice invoice) {
         return invoiceRepository.save(invoice);
     }
+
     public void deleteById(Long id) {
         invoiceRepository.deleteById(id);
     }

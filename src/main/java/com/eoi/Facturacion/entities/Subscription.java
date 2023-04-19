@@ -39,7 +39,5 @@ public class Subscription {
     )
     private List<Phone> phones;
 
-
-
     // getters and setters
 }

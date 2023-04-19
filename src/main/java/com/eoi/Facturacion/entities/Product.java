@@ -14,17 +14,29 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Product {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    /**
+     * Identificador único del producto.
+     */
+    @Id // Indica que esta propiedad es la clave primaria de la entidad
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Indica que la estrategia de generación de la clave es autoincremental
     private Long id;
 
+    /**
+     * Nombre del producto.
+     */
     private String name;
 
+    /**
+     * Descripción del producto.
+     */
     private String description;
+
+    /**
+     * Precio del producto.
+     */
+    @Column(name = "price") // Indica que esta propiedad está mapeada a la columna "price" de la tabla correspondiente
     private Double price;
 
-
-
-
-
+    // getters and setters
 }
+
